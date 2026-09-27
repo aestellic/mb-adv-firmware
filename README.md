@@ -6,13 +6,11 @@ This project is provided as-is, without any warranty.
 
 ## Running
 
-1. Copy your multiboot rom to `mb.gba` in the repo directory
+1. Copy your multiboot roms to `mb_1.gba`, `mb_2.gba`, and `mb_3.gba` in the repo directory
 2. Hold the pico reset button
 3. Connect it to the computer
 4. Run `cargo run --release`
 5. Eject and reset the pico
-6. Plug the pico into the GBA
-7. Turn on the GBA
 
 ## Credits
 
