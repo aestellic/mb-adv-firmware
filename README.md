@@ -4,6 +4,9 @@ Firmware for the mb_adv which distributes GBA multiboot ROMs.
 
 This project is provided as-is, without any warranty.
 
+> [!WARNING]
+> This firmware (and its associated project) are a work-in-progress and are currently incomplete.
+
 ## Running
 
 1. Copy your multiboot roms to `mb_1.gba`, `mb_2.gba`, and `mb_3.gba` in the repo directory
