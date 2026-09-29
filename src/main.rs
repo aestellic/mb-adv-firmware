@@ -59,16 +59,16 @@ fn main() -> ! {
 
     let mut led_pin = pins.led.into_push_pull_output();
 
-    blink(&mut led_pin, &mut delay, 1);
+    //blink(&mut led_pin, &mut delay, 1);
 
-    let opt1 = pins.gpio20.into_pull_up_input();
+    let opt1 = pins.gpio17.into_pull_up_input();
     let opt2 = pins.gpio21.into_pull_up_input();
     let opt3 = pins.gpio22.into_pull_up_input();
 
     // These are implicitly used by the spi driver if they are in the correct mode
-    let _spi_sclk = pins.gpio2.into_mode::<gpio::FunctionSpi>();
-    let _spi_mosi = pins.gpio3.into_mode::<gpio::FunctionSpi>();
-    let _spi_miso = pins.gpio4.into_mode::<gpio::FunctionSpi>();
+    let _spi_mosi = pins.gpio20.into_mode::<gpio::FunctionSpi>();
+    let _spi_sclk = pins.gpio6.into_mode::<gpio::FunctionSpi>();
+    let _spi_miso = pins.gpio7.into_mode::<gpio::FunctionSpi>();
 
     // Create an SPI driver instance for the SPI0 device
     let spi = spi::Spi::new(pac.SPI0);
@@ -84,6 +84,9 @@ fn main() -> ! {
     let mut gba = gba::Gba::new(&mut spi, MB_ROM_1);
 
     let mut has_multibooted = false;
+    let mut opt1_selected = false;
+    let mut opt2_selected = false;
+    let mut opt3_selected = false;
 
     loop {
         if gba.is_ready(&mut delay) && !has_multibooted {
@@ -105,14 +108,26 @@ fn main() -> ! {
             };
         }
         else {
-            if opt1.is_low().unwrap() {
+            if opt1.is_low().unwrap() && !opt1_selected {
+                opt1_selected = true;
+                opt2_selected = false;
+                opt3_selected = false;
                 gba = gba::Gba::new(&mut spi, MB_ROM_1);
+                blink(&mut led_pin, &mut delay, 1);
             }
-            else if opt2.is_low().unwrap() {
+            else if opt2.is_low().unwrap() && !opt2_selected {
+                opt1_selected = false;
+                opt2_selected = true;
+                opt3_selected = false;
                 gba = gba::Gba::new(&mut spi, MB_ROM_2);
+                blink(&mut led_pin, &mut delay, 2);
             }
-            else if opt3.is_low().unwrap() {
+            else if opt3.is_low().unwrap() && !opt3_selected {
+                opt1_selected = false;
+                opt2_selected = false;
+                opt3_selected = true;                
                 gba = gba::Gba::new(&mut spi, MB_ROM_3);
+                blink(&mut led_pin, &mut delay, 3);
             }
         }
     }
